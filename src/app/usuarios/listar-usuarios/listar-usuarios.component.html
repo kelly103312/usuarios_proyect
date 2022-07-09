@@ -1,0 +1,57 @@
+<div class="container">
+    <h1>Listado de usuarios</h1>
+
+    <div class="row">
+        <form>
+            <input class="form-control" placeholder="Buscar...">
+        </form>
+      
+    </div>
+    <div >
+        <div class="row" *ngFor="let user of usuarios">
+            <div class="col-5">
+                <img src="{{user.avatar}}" alt="imagen_user">
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-7">
+                        <strong><label>Nombres</label> </strong>
+                        <label> {{" " +user.first_name +" " +user.last_name}}</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-7">
+                        <label><strong>E-mail</strong> </label>
+                        <label> {{" " + user.email}}</label>
+                    </div>
+                    <button class="btn btn-primary" type="button">Ver detalle</button>
+                </div>
+
+            </div>
+            
+        </div>
+        
+    </div>
+    <ng-template #detallesUser let-modal>
+        <div class="modal-header">
+         <h5 class="modal-title" id="editProfileLabel">Detalles del usuario</h5>
+         <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+         </button>
+        </div>
+        
+        <div class="modal-body">
+         <form>
+          <div class="form-group row">
+           <label for="firstname" class="col-sm-4 col-form-label">Nombre</label>
+           <div class="col-sm-8">
+            <input type="text" class="form-control" id="firstname" [(ngModel)]="usuario.first_name" >
+           </div>
+          </div>
+          <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+          </div>
+         </form>
+        </div>
+       </ng-template>
+</div>
