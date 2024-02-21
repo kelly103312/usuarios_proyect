@@ -38,18 +38,22 @@ jobs:
           echo test, and deploy your project.
           
    # Define las reglas de aprobación
-   pull_request_rules:
-      - name: Requiere aprobación de un miembro
-        conditions:
-          - required_approvals:
-              count: 1
-      - name: A job requires either runs-on or uses
-        if: always()
-        runs-on: ubuntu-latest
-        steps:
-          - name: Check if required approvals met
-            run: |
-              if [ ${{ steps.check_approvals.outputs.data.total_count }} -lt 1 ]; then
-                echo "Requiere aprobación de un miembro no cumplida."
+  pull_request_rules:
+    - name: "Requiere aprobación de un miembro"
+      uses: actions/checkout@v1
+      conditions:
+        - required_approvals:
+            count: 1
+    - name: "Validación de configuración de trabajos"
+      if: always()
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v1
+        - name: "Verificar configuración de trabajos"
+          run: |
+            for job in $(jq -r '.jobs | keys[]' $GITHUB_EVENT_PATH); do
+              if [ -z "$(jq -r '.jobs[$job].runs-on // .jobs[$job].uses' $GITHUB_EVENT_PATH)" ]; then
+                echo "El trabajo '$job' no tiene definida la directiva 'runs-on' o 'uses'."
                 exit 1
               fi
+            done
